@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function POST(request: Request) {
   try {
     const { product, target, tone } = await request.json();
@@ -16,6 +12,18 @@ export async function POST(request: Request) {
       );
     }
 
+    // Verificar se a chave da API está configurada
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: "Chave da API OpenAI não configurada. Configure OPENAI_API_KEY nas variáveis de ambiente." },
+        { status: 500 }
+      );
+    }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -25,12 +33,7 @@ export async function POST(request: Request) {
         },
         {
           role: "user",
-          content: `Crie 3 mensagens comerciais diferentes para:
-Produto/Serviço: ${product}
-Público-alvo: ${target}
-Tom: ${tone || "profissional e persuasivo"}
-
-Inclua: gancho inicial, benefícios, call-to-action forte. Varie os estilos entre as 3 mensagens.`,
+          content: `Crie 3 mensagens comerciais diferentes para:\nProduto/Serviço: ${product}\nPúblico-alvo: ${target}\nTom: ${tone || "profissional e persuasivo"}\n\nInclua: gancho inicial, benefícios, call-to-action forte. Varie os estilos entre as 3 mensagens.`,
         },
       ],
       temperature: 0.8,
@@ -39,10 +42,11 @@ Inclua: gancho inicial, benefícios, call-to-action forte. Varie os estilos entr
     const result = completion.choices[0].message.content;
 
     return NextResponse.json({ result });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro na API:", error);
+    const errorMessage = error?.message || "Erro desconhecido ao gerar mensagem";
     return NextResponse.json(
-      { error: "Erro ao gerar mensagem" },
+      { error: `Erro ao gerar mensagem: ${errorMessage}` },
       { status: 500 }
     );
   }

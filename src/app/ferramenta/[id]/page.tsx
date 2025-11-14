@@ -176,22 +176,28 @@ export default function FerramentaPage() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error(`Erro na API: ${response.status}`);
-      }
-
       const data = await response.json();
+
+      if (!response.ok) {
+        // Mostrar erro específico da API
+        const errorMsg = data.error || `Erro na API: ${response.status}`;
+        toast.error(errorMsg);
+        setResult("");
+        return;
+      }
       
       if (data.result) {
         setResult(data.result);
         toast.success("Conteúdo gerado com sucesso!");
       } else {
-        throw new Error("Resposta da API não contém resultado");
+        toast.error("Resposta da API não contém resultado");
+        setResult("");
       }
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
+    } catch (error: any) {
+      const errorMsg = error?.message || "Erro ao processar. Tente novamente!";
+      toast.error(errorMsg);
       console.error("Erro detalhado:", error);
-      setResult("Erro ao gerar conteúdo. Por favor, tente novamente.");
+      setResult("");
     } finally {
       setLoading(false);
     }

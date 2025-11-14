@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function POST(request: Request) {
   try {
     const { topic, chapters } = await request.json();
@@ -16,6 +12,18 @@ export async function POST(request: Request) {
       );
     }
 
+    // Verificar se a chave da API está configurada
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: "Chave da API OpenAI não configurada. Configure OPENAI_API_KEY nas variáveis de ambiente." },
+        { status: 500 }
+      );
+    }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -25,16 +33,7 @@ export async function POST(request: Request) {
         },
         {
           role: "user",
-          content: `Crie um ebook completo sobre: ${topic}
-
-Estrutura:
-- Título impactante
-- Introdução (2-3 parágrafos)
-- ${chapters || 5} capítulos principais (cada um com 3-4 parágrafos)
-- Conclusão
-- Dicas práticas finais
-
-Seja informativo, prático e engajador.`,
+          content: `Crie um ebook completo sobre: ${topic}\n\nEstrutura:\n- Título impactante\n- Introdução (2-3 parágrafos)\n- ${chapters || 5} capítulos principais (cada um com 3-4 parágrafos)\n- Conclusão\n- Dicas práticas finais\n\nSeja informativo, prático e engajador.`,
         },
       ],
       temperature: 0.7,
@@ -44,10 +43,11 @@ Seja informativo, prático e engajador.`,
     const result = completion.choices[0].message.content;
 
     return NextResponse.json({ result });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro na API:", error);
+    const errorMessage = error?.message || "Erro desconhecido ao gerar ebook";
     return NextResponse.json(
-      { error: "Erro ao gerar ebook" },
+      { error: `Erro ao gerar ebook: ${errorMessage}` },
       { status: 500 }
     );
   }

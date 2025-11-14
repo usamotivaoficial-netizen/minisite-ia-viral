@@ -1,10 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function POST(request: Request) {
   try {
     const { topic, platform } = await request.json();
@@ -15,6 +11,18 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    // Verificar se a chave da API está configurada
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: "Chave da API OpenAI não configurada. Configure OPENAI_API_KEY nas variáveis de ambiente." },
+        { status: 500 }
+      );
+    }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
     const platformText = platform === "tiktok" ? "TikTok" : "Instagram";
 
@@ -36,10 +44,14 @@ export async function POST(request: Request) {
     const result = completion.choices[0].message.content;
 
     return NextResponse.json({ result });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro na API:", error);
+    
+    // Retornar mensagem de erro mais detalhada
+    const errorMessage = error?.message || "Erro desconhecido ao gerar legenda";
+    
     return NextResponse.json(
-      { error: "Erro ao gerar legenda" },
+      { error: `Erro ao gerar legenda: ${errorMessage}` },
       { status: 500 }
     );
   }

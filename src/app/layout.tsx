@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 // Import all available fonts for AI usage
 import "../lib/fonts";
+import { PlanProvider } from "@/contexts/PlanContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -63,8 +64,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <Toaster position="top-center" richColors />
+        <PlanProvider>
+          {children}
+          <Toaster position="top-center" richColors />
+        </PlanProvider>
       </body>
     </html>
   );
