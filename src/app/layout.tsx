@@ -18,8 +18,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Tools Hub - Ferramentas Virais de IA",
-  description: "Ferramentas gratuitas de IA para melhorar textos, gerar legendas virais, escrever emails e criar histórias",
+  title: "AI Tools Hub - Ferramentas de IA Gratuitas | Cria Tudo com 1 Clique",
+  description: "Crie legendas virais, receitas com 3 ingredientes, nomes de negócio, currículos profissionais e muito mais com 14 ferramentas gratuitas de inteligência artificial. Rápido, simples e 100% grátis.",
+  keywords: "ferramentas IA, gerador legendas, receitas rápidas, criador currículo, IA gratuita, inteligência artificial, conteúdo viral",
+  openGraph: {
+    title: "AI Tools Hub - Ferramentas de IA Gratuitas",
+    description: "14 ferramentas de IA para criar conteúdo viral, receitas, currículos e muito mais. 100% gratuito!",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -31,6 +37,28 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head>
         <Script src="/lasy-bridge.js" strategy="beforeInteractive" />
+        
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-XXXXXXXXXX');
+          `}
+        </Script>
+
+        {/* Google AdSense */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

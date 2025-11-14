@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, Wand2, MessageSquare, FileText, Zap, Instagram, ChefHat, Lightbulb, FileUser, Dumbbell, User, Megaphone, Mail, BookOpen, Phone } from "lucide-react";
+import { Sparkles, Wand2, Instagram, ChefHat, Lightbulb, FileUser, Dumbbell, User, Megaphone, BookOpen, Phone, Crown, ArrowRight, Check } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,6 +14,7 @@ import { toast } from "sonner";
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
+  const [showAllTools, setShowAllTools] = useState(false);
 
   // Estados para cada ferramenta
   const [viralTopic, setViralTopic] = useState("");
@@ -350,655 +351,452 @@ export default function Home() {
     }
   };
 
+  const topTools = [
+    { 
+      id: "viral-caption", 
+      name: "Legenda Viral", 
+      description: "Cria legendas virais para TikTok e Instagram",
+      icon: Instagram, 
+      gradient: "from-pink-500 to-purple-500" 
+    },
+    { 
+      id: "recipe", 
+      name: "Receitas 3 Ingredientes", 
+      description: "Receitas rápidas com ingredientes que já tens em casa",
+      icon: ChefHat, 
+      gradient: "from-orange-500 to-red-500" 
+    },
+    { 
+      id: "business-name", 
+      name: "Nome de Negócio", 
+      description: "Sugestões criativas e profissionais para a sua marca",
+      icon: Lightbulb, 
+      gradient: "from-yellow-500 to-orange-500" 
+    },
+    { 
+      id: "resume", 
+      name: "Currículo", 
+      description: "Currículo profissional pronto em segundos",
+      icon: FileUser, 
+      gradient: "from-blue-500 to-indigo-500" 
+    },
+    { 
+      id: "workout", 
+      name: "Plano de Treino", 
+      description: "Treinos personalizados para os teus objetivos",
+      icon: Dumbbell, 
+      gradient: "from-green-500 to-emerald-500" 
+    },
+    { 
+      id: "bio", 
+      name: "Bio Social", 
+      description: "Bios criativas que atraem seguidores",
+      icon: User, 
+      gradient: "from-purple-500 to-pink-500" 
+    },
+    { 
+      id: "post-ideas", 
+      name: "Ideias de Posts", 
+      description: "Nunca mais fiques sem ideias para publicar",
+      icon: Lightbulb, 
+      gradient: "from-cyan-500 to-blue-500" 
+    },
+    { 
+      id: "whatsapp", 
+      name: "Resposta WhatsApp", 
+      description: "Respostas inteligentes para qualquer mensagem",
+      icon: Phone, 
+      gradient: "from-green-500 to-teal-500" 
+    },
+  ];
+
+  const allTools = [
+    ...topTools,
+    { 
+      id: "sales", 
+      name: "Mensagem Comercial", 
+      description: "Mensagens de vendas que convertem",
+      icon: Megaphone, 
+      gradient: "from-red-500 to-pink-500" 
+    },
+    { 
+      id: "ebook", 
+      name: "Criador de Ebook", 
+      description: "Ebooks completos gerados automaticamente",
+      icon: BookOpen, 
+      gradient: "from-indigo-500 to-purple-500" 
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900 dark:to-blue-900">
-      {/* Header */}
-      <header className="border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      {/* Header Fixo e Limpo */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-900">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded-lg">
-                <Sparkles className="w-6 h-6 text-white" />
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                AI Tools Hub
-              </h1>
+              <span className="text-xl font-semibold text-gray-900 dark:text-white">AI Tools</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-yellow-500" />
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                14 Ferramentas Virais
-              </span>
-            </div>
+            
+            <nav className="hidden md:flex items-center gap-8">
+              <a href="/sobre" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Sobre</a>
+              <a href="/blog" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Blog</a>
+              <a href="#afiliados" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Afiliados</a>
+              <a href="#contacto" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Contacto</a>
+            </nav>
+
+            <a href="#premium">
+              <Button size="sm" variant="ghost" className="text-sm">
+                <Crown className="w-4 h-4 mr-1.5" />
+                Premium
+              </Button>
+            </a>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
-            14 Ferramentas de IA Gratuitas
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Crie conteúdo viral, receitas, currículos, planos de treino e muito mais com inteligência artificial
+      {/* Espaçamento para header fixo */}
+      <div className="h-16"></div>
+
+      {/* Hero Section */}
+      <section className="py-24 px-6">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+            Ferramentas de IA<br />
+            <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+              100% Gratuitas
+            </span><br />
+            <span className="text-4xl md:text-5xl">Cria Tudo com 1 Clique</span>
+          </h1>
+          
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-4 max-w-2xl mx-auto">
+            Ferramentas criadas com IA de última geração — rápidas, simples e totalmente gratuitas.
           </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg">
+              Começar Agora
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="relative px-8 py-6 text-lg rounded-xl border-2 bg-transparent text-gray-900 dark:text-white overflow-hidden group hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all duration-300"
+              style={{
+                borderImage: "linear-gradient(135deg, rgb(236, 72, 153), rgb(168, 85, 247)) 1"
+              }}
+            >
+              <span className="relative z-10">Ver Ferramentas</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </Button>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
+              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">+10.000</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">usuários</div>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
+              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">+14</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">ferramentas de IA</div>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
+              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">100%</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">grátis</div>
+            </div>
+          </div>
         </div>
+      </section>
 
-        {/* Tools Section */}
-        <Card className="shadow-2xl border-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Wand2 className="w-6 h-6 text-purple-500" />
-              Escolha sua ferramenta
-            </CardTitle>
-            <CardDescription>
-              Selecione a ferramenta de IA que você precisa e comece a criar
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="viral-caption" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 h-auto p-2">
-                <TabsTrigger value="viral-caption" className="flex items-center gap-1 py-2 px-2 text-xs">
-                  <Instagram className="w-3 h-3" />
-                  <span className="hidden sm:inline">Legenda Viral</span>
-                  <span className="sm:hidden">Legenda</span>
-                </TabsTrigger>
-                <TabsTrigger value="recipe" className="flex items-center gap-1 py-2 px-2 text-xs">
-                  <ChefHat className="w-3 h-3" />
-                  <span className="hidden sm:inline">Receita 3 Ingr.</span>
-                  <span className="sm:hidden">Receita</span>
-                </TabsTrigger>
-                <TabsTrigger value="business-name" className="flex items-center gap-1 py-2 px-2 text-xs">
-                  <Lightbulb className="w-3 h-3" />
-                  <span className="hidden sm:inline">Nome Negócio</span>
-                  <span className="sm:hidden">Nome</span>
-                </TabsTrigger>
-                <TabsTrigger value="resume" className="flex items-center gap-1 py-2 px-2 text-xs">
-                  <FileUser className="w-3 h-3" />
-                  <span className="hidden sm:inline">Currículo</span>
-                  <span className="sm:hidden">CV</span>
-                </TabsTrigger>
-                <TabsTrigger value="workout" className="flex items-center gap-1 py-2 px-2 text-xs">
-                  <Dumbbell className="w-3 h-3" />
-                  <span className="hidden sm:inline">Plano Treino</span>
-                  <span className="sm:hidden">Treino</span>
-                </TabsTrigger>
-                <TabsTrigger value="bio" className="flex items-center gap-1 py-2 px-2 text-xs">
-                  <User className="w-3 h-3" />
-                  <span className="hidden sm:inline">Bio Social</span>
-                  <span className="sm:hidden">Bio</span>
-                </TabsTrigger>
-                <TabsTrigger value="post-ideas" className="flex items-center gap-1 py-2 px-2 text-xs">
-                  <Lightbulb className="w-3 h-3" />
-                  <span className="hidden sm:inline">Ideias Post</span>
-                  <span className="sm:hidden">Ideias</span>
-                </TabsTrigger>
-                <TabsTrigger value="sales" className="flex items-center gap-1 py-2 px-2 text-xs">
-                  <Megaphone className="w-3 h-3" />
-                  <span className="hidden sm:inline">Msg Comercial</span>
-                  <span className="sm:hidden">Vendas</span>
-                </TabsTrigger>
-                <TabsTrigger value="ebook" className="flex items-center gap-1 py-2 px-2 text-xs">
-                  <BookOpen className="w-3 h-3" />
-                  <span className="hidden sm:inline">Ebook</span>
-                  <span className="sm:hidden">Ebook</span>
-                </TabsTrigger>
-                <TabsTrigger value="whatsapp" className="flex items-center gap-1 py-2 px-2 text-xs">
-                  <Phone className="w-3 h-3" />
-                  <span className="hidden sm:inline">Resposta Zap</span>
-                  <span className="sm:hidden">Zap</span>
-                </TabsTrigger>
-              </TabsList>
-
-              {/* Legenda Viral TikTok/Instagram */}
-              <TabsContent value="viral-caption" className="space-y-4 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="viral-topic">Sobre o que é sua postagem?</Label>
-                  <Input
-                    id="viral-topic"
-                    placeholder="Ex: viagem para praia, receita de bolo, dica de produtividade..."
-                    value={viralTopic}
-                    onChange={(e) => setViralTopic(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="viral-platform">Plataforma</Label>
-                  <Select value={viralPlatform} onValueChange={setViralPlatform}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="instagram">Instagram</SelectItem>
-                      <SelectItem value="tiktok">TikTok</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button 
-                  onClick={handleViralCaption} 
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600"
-                >
-                  {loading ? "Gerando..." : "🔥 Gerar Legendas Virais"}
-                </Button>
-              </TabsContent>
-
-              {/* Receita 3 Ingredientes */}
-              <TabsContent value="recipe" className="space-y-4 mt-6">
-                <div className="space-y-2">
-                  <Label>Digite 3 ingredientes</Label>
-                  <Input
-                    placeholder="Ingrediente 1"
-                    value={ingredient1}
-                    onChange={(e) => setIngredient1(e.target.value)}
-                  />
-                  <Input
-                    placeholder="Ingrediente 2"
-                    value={ingredient2}
-                    onChange={(e) => setIngredient2(e.target.value)}
-                  />
-                  <Input
-                    placeholder="Ingrediente 3"
-                    value={ingredient3}
-                    onChange={(e) => setIngredient3(e.target.value)}
-                  />
-                </div>
-                <Button 
-                  onClick={handleRecipe} 
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-                >
-                  {loading ? "Criando..." : "👨‍🍳 Criar Receita"}
-                </Button>
-              </TabsContent>
-
-              {/* Nome de Negócio */}
-              <TabsContent value="business-name" className="space-y-4 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="business-industry">Tipo de negócio</Label>
-                  <Input
-                    id="business-industry"
-                    placeholder="Ex: cafeteria, loja de roupas, consultoria..."
-                    value={businessIndustry}
-                    onChange={(e) => setBusinessIndustry(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="business-style">Estilo desejado (opcional)</Label>
-                  <Input
-                    id="business-style"
-                    placeholder="Ex: moderno, elegante, divertido..."
-                    value={businessStyle}
-                    onChange={(e) => setBusinessStyle(e.target.value)}
-                  />
-                </div>
-                <Button 
-                  onClick={handleBusinessName} 
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
-                >
-                  {loading ? "Gerando..." : "💡 Gerar Nomes"}
-                </Button>
-              </TabsContent>
-
-              {/* Currículo */}
-              <TabsContent value="resume" className="space-y-4 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="resume-name">Seu nome completo</Label>
-                  <Input
-                    id="resume-name"
-                    placeholder="João Silva"
-                    value={resumeName}
-                    onChange={(e) => setResumeName(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="resume-profession">Profissão/Cargo desejado</Label>
-                  <Input
-                    id="resume-profession"
-                    placeholder="Ex: Desenvolvedor Web, Designer Gráfico..."
-                    value={resumeProfession}
-                    onChange={(e) => setResumeProfession(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="resume-experience">Experiência (opcional)</Label>
-                  <Textarea
-                    id="resume-experience"
-                    placeholder="Descreva brevemente sua experiência..."
-                    value={resumeExperience}
-                    onChange={(e) => setResumeExperience(e.target.value)}
-                    className="min-h-[80px]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="resume-skills">Habilidades (opcional)</Label>
-                  <Input
-                    id="resume-skills"
-                    placeholder="Ex: JavaScript, Photoshop, Excel..."
-                    value={resumeSkills}
-                    onChange={(e) => setResumeSkills(e.target.value)}
-                  />
-                </div>
-                <Button 
-                  onClick={handleResume} 
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600"
-                >
-                  {loading ? "Gerando..." : "📄 Gerar Currículo"}
-                </Button>
-              </TabsContent>
-
-              {/* Plano de Treino */}
-              <TabsContent value="workout" className="space-y-4 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="workout-goal">Objetivo do treino</Label>
-                  <Input
-                    id="workout-goal"
-                    placeholder="Ex: perder peso, ganhar massa muscular, definição..."
-                    value={workoutGoal}
-                    onChange={(e) => setWorkoutGoal(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="workout-level">Nível de experiência</Label>
-                  <Select value={workoutLevel} onValueChange={setWorkoutLevel}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione seu nível" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="iniciante">Iniciante</SelectItem>
-                      <SelectItem value="intermediario">Intermediário</SelectItem>
-                      <SelectItem value="avancado">Avançado</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="workout-duration">Duração por sessão (opcional)</Label>
-                  <Input
-                    id="workout-duration"
-                    placeholder="Ex: 30 minutos, 1 hora..."
-                    value={workoutDuration}
-                    onChange={(e) => setWorkoutDuration(e.target.value)}
-                  />
-                </div>
-                <Button 
-                  onClick={handleWorkout} 
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
-                >
-                  {loading ? "Criando..." : "💪 Criar Plano de Treino"}
-                </Button>
-              </TabsContent>
-
-              {/* Bio para Redes Sociais */}
-              <TabsContent value="bio" className="space-y-4 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="bio-description">Descreva você ou seu perfil</Label>
-                  <Textarea
-                    id="bio-description"
-                    placeholder="Ex: Fotógrafo de viagens, amante de café, 25 anos..."
-                    value={bioDescription}
-                    onChange={(e) => setBioDescription(e.target.value)}
-                    className="min-h-[100px]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bio-style">Estilo (opcional)</Label>
-                  <Input
-                    id="bio-style"
-                    placeholder="Ex: profissional, divertido, inspirador..."
-                    value={bioStyle}
-                    onChange={(e) => setBioStyle(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bio-platform">Plataforma</Label>
-                  <Select value={bioPlatform} onValueChange={setBioPlatform}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="instagram">Instagram</SelectItem>
-                      <SelectItem value="tiktok">TikTok</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button 
-                  onClick={handleBio} 
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-                >
-                  {loading ? "Gerando..." : "✨ Gerar Bios"}
-                </Button>
-              </TabsContent>
-
-              {/* Ideias de Posts */}
-              <TabsContent value="post-ideas" className="space-y-4 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="post-niche">Seu nicho/tema</Label>
-                  <Input
-                    id="post-niche"
-                    placeholder="Ex: fitness, culinária, empreendedorismo..."
-                    value={postNiche}
-                    onChange={(e) => setPostNiche(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="post-quantity">Quantidade de ideias</Label>
-                  <Select value={postQuantity} onValueChange={setPostQuantity}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="5">5 ideias</SelectItem>
-                      <SelectItem value="10">10 ideias</SelectItem>
-                      <SelectItem value="15">15 ideias</SelectItem>
-                      <SelectItem value="20">20 ideias</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button 
-                  onClick={handlePostIdeas} 
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
-                >
-                  {loading ? "Gerando..." : "💡 Gerar Ideias"}
-                </Button>
-              </TabsContent>
-
-              {/* Mensagem Comercial */}
-              <TabsContent value="sales" className="space-y-4 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="sales-product">Produto/Serviço</Label>
-                  <Input
-                    id="sales-product"
-                    placeholder="Ex: curso online, consultoria, produto físico..."
-                    value={salesProduct}
-                    onChange={(e) => setSalesProduct(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sales-target">Público-alvo</Label>
-                  <Input
-                    id="sales-target"
-                    placeholder="Ex: empreendedores iniciantes, mães de primeira viagem..."
-                    value={salesTarget}
-                    onChange={(e) => setSalesTarget(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sales-tone">Tom da mensagem (opcional)</Label>
-                  <Input
-                    id="sales-tone"
-                    placeholder="Ex: profissional, amigável, urgente..."
-                    value={salesTone}
-                    onChange={(e) => setSalesTone(e.target.value)}
-                  />
-                </div>
-                <Button 
-                  onClick={handleSalesMessage} 
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
-                >
-                  {loading ? "Gerando..." : "📢 Gerar Mensagens"}
-                </Button>
-              </TabsContent>
-
-              {/* Ebook */}
-              <TabsContent value="ebook" className="space-y-4 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="ebook-topic">Tema do ebook</Label>
-                  <Input
-                    id="ebook-topic"
-                    placeholder="Ex: produtividade, marketing digital, saúde mental..."
-                    value={ebookTopic}
-                    onChange={(e) => setEbookTopic(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="ebook-chapters">Número de capítulos</Label>
-                  <Select value={ebookChapters} onValueChange={setEbookChapters}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="3">3 capítulos</SelectItem>
-                      <SelectItem value="5">5 capítulos</SelectItem>
-                      <SelectItem value="7">7 capítulos</SelectItem>
-                      <SelectItem value="10">10 capítulos</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button 
-                  onClick={handleEbook} 
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
-                >
-                  {loading ? "Gerando..." : "📚 Gerar Ebook"}
-                </Button>
-              </TabsContent>
-
-              {/* Resposta WhatsApp */}
-              <TabsContent value="whatsapp" className="space-y-4 mt-6">
-                <div className="space-y-2">
-                  <Label htmlFor="whatsapp-message">Mensagem recebida</Label>
-                  <Textarea
-                    id="whatsapp-message"
-                    placeholder="Cole aqui a mensagem que você recebeu no WhatsApp..."
-                    value={whatsappMessage}
-                    onChange={(e) => setWhatsappMessage(e.target.value)}
-                    className="min-h-[100px]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="whatsapp-tone">Tom da resposta (opcional)</Label>
-                  <Input
-                    id="whatsapp-tone"
-                    placeholder="Ex: formal, casual, amigável..."
-                    value={whatsappTone}
-                    onChange={(e) => setWhatsappTone(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="whatsapp-context">Contexto adicional (opcional)</Label>
-                  <Input
-                    id="whatsapp-context"
-                    placeholder="Ex: cliente reclamando, amigo pedindo favor..."
-                    value={whatsappContext}
-                    onChange={(e) => setWhatsappContext(e.target.value)}
-                  />
-                </div>
-                <Button 
-                  onClick={handleWhatsappReply} 
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
-                >
-                  {loading ? "Gerando..." : "💬 Gerar Respostas"}
-                </Button>
-              </TabsContent>
-            </Tabs>
-
-            {/* Result Display */}
-            {result && (
-              <div className="mt-6 p-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-purple-900 rounded-lg border-2 border-purple-200 dark:border-purple-700">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-lg flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-purple-500" />
-                    Resultado
-                  </h3>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      navigator.clipboard.writeText(result);
-                      toast.success("Copiado para área de transferência!");
-                    }}
-                  >
-                    Copiar
-                  </Button>
-                </div>
-                <div className="prose dark:prose-invert max-w-none">
-                  <p className="whitespace-pre-wrap text-gray-700 dark:text-gray-200">{result}</p>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mt-12">
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="w-10 h-10 bg-pink-100 dark:bg-pink-900 rounded-lg flex items-center justify-center mb-2">
-                <Instagram className="w-5 h-5 text-pink-600 dark:text-pink-400" />
-              </div>
-              <CardTitle className="text-base">Legenda Viral</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Legendas criativas para TikTok e Instagram
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mb-2">
-                <ChefHat className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-              </div>
-              <CardTitle className="text-base">Receita 3 Ingr.</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Receitas deliciosas com apenas 3 ingredientes
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center mb-2">
-                <Lightbulb className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-              </div>
-              <CardTitle className="text-base">Nome Negócio</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Nomes criativos para sua empresa
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-2">
-                <FileUser className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <CardTitle className="text-base">Currículo</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Currículo profissional em segundos
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mb-2">
-                <Dumbbell className="w-5 h-5 text-green-600 dark:text-green-400" />
-              </div>
-              <CardTitle className="text-base">Plano Treino</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Treino personalizado para seus objetivos
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mb-2">
-                <User className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-              </div>
-              <CardTitle className="text-base">Bio Social</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Bios impactantes para redes sociais
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="w-10 h-10 bg-cyan-100 dark:bg-cyan-900 rounded-lg flex items-center justify-center mb-2">
-                <Lightbulb className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
-              </div>
-              <CardTitle className="text-base">Ideias Posts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Ideias criativas para seu conteúdo
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="w-10 h-10 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center mb-2">
-                <Megaphone className="w-5 h-5 text-red-600 dark:text-red-400" />
-              </div>
-              <CardTitle className="text-base">Msg Comercial</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Mensagens persuasivas de vendas
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mb-2">
-                <BookOpen className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-              </div>
-              <CardTitle className="text-base">Ebook</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Ebooks completos gerados por IA
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardHeader className="pb-3">
-              <div className="w-10 h-10 bg-teal-100 dark:bg-teal-900 rounded-lg flex items-center justify-center mb-2">
-                <Phone className="w-5 h-5 text-teal-600 dark:text-teal-400" />
-              </div>
-              <CardTitle className="text-base">Resposta Zap</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Respostas inteligentes para WhatsApp
-              </p>
-            </CardContent>
-          </Card>
+      {/* Anúncio 1 - Banner 728x90 */}
+      <section className="py-12 px-6">
+        <div className="container mx-auto max-w-4xl">
+          <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 text-center">
+            <div className="text-xs text-gray-400 mb-3">Publicidade</div>
+            <div className="h-24 flex items-center justify-center text-gray-400">
+              Banner 728x90 - Google AdSense
+            </div>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Ferramentas Principais (8 mais usadas) */}
+      <section className="py-24 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              Ferramentas Mais Usadas
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400">
+              Escolha uma ferramenta e comece a criar agora
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {topTools.map((tool) => {
+              const Icon = tool.icon;
+              return (
+                <Card key={tool.id} className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 hover:border-gray-200 dark:hover:border-gray-700">
+                  <CardContent className="p-8 text-center">
+                    <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{tool.name}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{tool.description}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          <div className="text-center">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              onClick={() => setShowAllTools(!showAllTools)}
+              className="rounded-xl border-2 px-8"
+            >
+              {showAllTools ? "Ver Menos" : "Ver todas as ferramentas"}
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Anúncio 2 - Banner 300x250 */}
+      <section className="py-12 px-6">
+        <div className="container mx-auto max-w-sm">
+          <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 border border-gray-100 dark:border-gray-800 text-center">
+            <div className="text-xs text-gray-400 mb-3">Publicidade</div>
+            <div className="h-64 flex items-center justify-center text-gray-400">
+              Banner 300x250 - Google AdSense
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Grade Completa de Ferramentas */}
+      {showAllTools && (
+        <section className="py-24 px-6 bg-gray-50 dark:bg-gray-900">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Todas as 14 Ferramentas
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400">
+                Explore todas as nossas ferramentas de IA
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {allTools.map((tool) => {
+                const Icon = tool.icon;
+                return (
+                  <Card key={tool.id} className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 hover:border-gray-200 dark:hover:border-gray-700 bg-white dark:bg-gray-950">
+                    <CardContent className="p-8 text-center">
+                      <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                        <Icon className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{tool.name}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{tool.description}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Seção Premium Clean */}
+      <section id="premium" className="py-24 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              Escolha seu Plano
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400">
+              Simples, transparente e sem surpresas
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Grátis */}
+            <Card className="border-2">
+              <CardHeader className="pb-8 pt-8">
+                <CardTitle className="text-2xl mb-2">Grátis</CardTitle>
+                <div className="text-4xl font-bold text-gray-900 dark:text-white">R$ 0</div>
+                <CardDescription className="text-base">Para começar</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">5 gerações por dia</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Acesso a 14 ferramentas</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Suporte por email</span>
+                </div>
+                <Button variant="outline" className="w-full mt-6 rounded-xl border-2">
+                  Começar Grátis
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Pro */}
+            <Card className="border-2 border-purple-200 dark:border-purple-800 relative">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                Popular
+              </div>
+              <CardHeader className="pb-8 pt-8">
+                <CardTitle className="text-2xl mb-2">Pro</CardTitle>
+                <div className="text-4xl font-bold text-gray-900 dark:text-white">R$ 29</div>
+                <CardDescription className="text-base">por mês</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Gerações ilimitadas</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Sem anúncios</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Prioridade no processamento</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Suporte prioritário</span>
+                </div>
+                <Button className="w-full mt-6 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600">
+                  Assinar Pro
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Ultimate */}
+            <Card className="border-2">
+              <CardHeader className="pb-8 pt-8">
+                <CardTitle className="text-2xl mb-2">Ultimate</CardTitle>
+                <div className="text-4xl font-bold text-gray-900 dark:text-white">R$ 79</div>
+                <CardDescription className="text-base">por mês</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Tudo do Pro</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">API de acesso</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Ferramentas exclusivas</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Suporte 24/7</span>
+                </div>
+                <Button variant="outline" className="w-full mt-6 rounded-xl border-2">
+                  Assinar Ultimate
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="border-t bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm mt-16">
-        <div className="container mx-auto px-4 py-6">
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
-            Criado com ❤️ usando IA • Todas as 14 ferramentas são gratuitas
-          </p>
+      <footer className="border-t border-gray-100 dark:border-gray-900 py-16 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-12">
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Produto</h3>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Ferramentas</a></li>
+                <li><a href="#premium" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Preços</a></li>
+                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">API</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Empresa</h3>
+              <ul className="space-y-3">
+                <li><a href="/sobre" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Sobre</a></li>
+                <li><a href="/blog" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#afiliados" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Afiliados</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Suporte</h3>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Ajuda</a></li>
+                <li><a href="#contacto" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Contacto</a></li>
+                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Status</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Legal</h3>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Privacidade</a></li>
+                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Termos</a></li>
+                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Cookies</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="pt-8 border-t border-gray-100 dark:border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-sm text-gray-600 dark:text-gray-400">© 2024 AI Tools. Todos os direitos reservados.</span>
+            </div>
+            <div className="flex items-center gap-6">
+              <a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Twitter</a>
+              <a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Instagram</a>
+              <a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">LinkedIn</a>
+            </div>
+          </div>
         </div>
       </footer>
+
+      {/* Barra Fixa Mobile (apenas mobile) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 px-4 py-3 shadow-lg">
+        <div className="flex items-center justify-around gap-2">
+          <a 
+            href="#viral-caption"
+            className="flex flex-col items-center gap-1 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
+          >
+            <Instagram className="w-5 h-5 text-pink-500" />
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Legendas</span>
+          </a>
+          <a 
+            href="#recipe"
+            className="flex flex-col items-center gap-1 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
+          >
+            <ChefHat className="w-5 h-5 text-orange-500" />
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Receitas</span>
+          </a>
+          <a 
+            href="#premium"
+            className="flex flex-col items-center gap-1 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
+          >
+            <Crown className="w-5 h-5 text-purple-500" />
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Premium</span>
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
