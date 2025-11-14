@@ -1,354 +1,38 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Sparkles, Wand2, Instagram, ChefHat, Lightbulb, FileUser, Dumbbell, User, Megaphone, BookOpen, Phone, Crown, ArrowRight, Check } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "sonner";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function Home() {
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState("");
+  const router = useRouter();
   const [showAllTools, setShowAllTools] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
-  // Estados para cada ferramenta
-  const [viralTopic, setViralTopic] = useState("");
-  const [viralPlatform, setViralPlatform] = useState("instagram");
-  
-  const [ingredient1, setIngredient1] = useState("");
-  const [ingredient2, setIngredient2] = useState("");
-  const [ingredient3, setIngredient3] = useState("");
-  
-  const [businessIndustry, setBusinessIndustry] = useState("");
-  const [businessStyle, setBusinessStyle] = useState("");
-  
-  const [resumeName, setResumeName] = useState("");
-  const [resumeProfession, setResumeProfession] = useState("");
-  const [resumeExperience, setResumeExperience] = useState("");
-  const [resumeSkills, setResumeSkills] = useState("");
-  
-  const [workoutGoal, setWorkoutGoal] = useState("");
-  const [workoutLevel, setWorkoutLevel] = useState("");
-  const [workoutDuration, setWorkoutDuration] = useState("");
-  
-  const [bioDescription, setBioDescription] = useState("");
-  const [bioStyle, setBioStyle] = useState("");
-  const [bioPlatform, setBioPlatform] = useState("instagram");
-  
-  const [postNiche, setPostNiche] = useState("");
-  const [postQuantity, setPostQuantity] = useState("10");
-  
-  const [salesProduct, setSalesProduct] = useState("");
-  const [salesTarget, setSalesTarget] = useState("");
-  const [salesTone, setSalesTone] = useState("");
-  
-  const [ebookTopic, setEbookTopic] = useState("");
-  const [ebookChapters, setEbookChapters] = useState("5");
-  
-  const [whatsappMessage, setWhatsappMessage] = useState("");
-  const [whatsappTone, setWhatsappTone] = useState("");
-  const [whatsappContext, setWhatsappContext] = useState("");
-
-  const handleViralCaption = async () => {
-    if (!viralTopic.trim()) {
-      toast.error("Digite um tema para a legenda!");
-      return;
-    }
-    
-    setLoading(true);
-    setResult("");
-    
-    try {
-      const response = await fetch("/api/ai/generate-viral-caption", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: viralTopic, platform: viralPlatform }),
-      });
-      
-      const data = await response.json();
-      setResult(data.result);
-      toast.success("Legendas virais geradas!");
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
-      console.error(error);
-    } finally {
-      setLoading(false);
+  // Função para scroll suave
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
-  const handleRecipe = async () => {
-    if (!ingredient1.trim() || !ingredient2.trim() || !ingredient3.trim()) {
-      toast.error("Preencha os 3 ingredientes!");
-      return;
-    }
-    
-    setLoading(true);
-    setResult("");
-    
-    try {
-      const response = await fetch("/api/ai/generate-recipe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ingredients: [ingredient1, ingredient2, ingredient3] }),
-      });
-      
-      const data = await response.json();
-      setResult(data.result);
-      toast.success("Receita criada!");
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+  // Função para scroll para ferramentas
+  const scrollToTools = () => {
+    scrollToSection('ferramentas-principais');
   };
 
-  const handleBusinessName = async () => {
-    if (!businessIndustry.trim()) {
-      toast.error("Digite o tipo de negócio!");
-      return;
-    }
-    
-    setLoading(true);
-    setResult("");
-    
-    try {
-      const response = await fetch("/api/ai/generate-business-name", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ industry: businessIndustry, style: businessStyle }),
-      });
-      
-      const data = await response.json();
-      setResult(data.result);
-      toast.success("Nomes gerados!");
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+  // Função para abrir modal de pagamento
+  const openPaymentModal = () => {
+    setShowPaymentModal(true);
   };
 
-  const handleResume = async () => {
-    if (!resumeName.trim() || !resumeProfession.trim()) {
-      toast.error("Preencha nome e profissão!");
-      return;
-    }
-    
-    setLoading(true);
-    setResult("");
-    
-    try {
-      const response = await fetch("/api/ai/generate-resume", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          name: resumeName, 
-          profession: resumeProfession,
-          experience: resumeExperience,
-          skills: resumeSkills
-        }),
-      });
-      
-      const data = await response.json();
-      setResult(data.result);
-      toast.success("Currículo gerado!");
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleWorkout = async () => {
-    if (!workoutGoal.trim() || !workoutLevel.trim()) {
-      toast.error("Preencha objetivo e nível!");
-      return;
-    }
-    
-    setLoading(true);
-    setResult("");
-    
-    try {
-      const response = await fetch("/api/ai/generate-workout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          goal: workoutGoal, 
-          level: workoutLevel,
-          duration: workoutDuration
-        }),
-      });
-      
-      const data = await response.json();
-      setResult(data.result);
-      toast.success("Plano de treino criado!");
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleBio = async () => {
-    if (!bioDescription.trim()) {
-      toast.error("Descreva seu perfil!");
-      return;
-    }
-    
-    setLoading(true);
-    setResult("");
-    
-    try {
-      const response = await fetch("/api/ai/generate-bio", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          description: bioDescription, 
-          style: bioStyle,
-          platform: bioPlatform
-        }),
-      });
-      
-      const data = await response.json();
-      setResult(data.result);
-      toast.success("Bios geradas!");
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePostIdeas = async () => {
-    if (!postNiche.trim()) {
-      toast.error("Digite seu nicho!");
-      return;
-    }
-    
-    setLoading(true);
-    setResult("");
-    
-    try {
-      const response = await fetch("/api/ai/generate-post-ideas", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          niche: postNiche, 
-          quantity: postQuantity
-        }),
-      });
-      
-      const data = await response.json();
-      setResult(data.result);
-      toast.success("Ideias geradas!");
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSalesMessage = async () => {
-    if (!salesProduct.trim() || !salesTarget.trim()) {
-      toast.error("Preencha produto e público-alvo!");
-      return;
-    }
-    
-    setLoading(true);
-    setResult("");
-    
-    try {
-      const response = await fetch("/api/ai/generate-sales-message", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          product: salesProduct, 
-          target: salesTarget,
-          tone: salesTone
-        }),
-      });
-      
-      const data = await response.json();
-      setResult(data.result);
-      toast.success("Mensagens geradas!");
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEbook = async () => {
-    if (!ebookTopic.trim()) {
-      toast.error("Digite o tema do ebook!");
-      return;
-    }
-    
-    setLoading(true);
-    setResult("");
-    
-    try {
-      const response = await fetch("/api/ai/generate-ebook", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          topic: ebookTopic, 
-          chapters: ebookChapters
-        }),
-      });
-      
-      const data = await response.json();
-      setResult(data.result);
-      toast.success("Ebook gerado! Copie e salve em um documento.");
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleWhatsappReply = async () => {
-    if (!whatsappMessage.trim()) {
-      toast.error("Digite a mensagem recebida!");
-      return;
-    }
-    
-    setLoading(true);
-    setResult("");
-    
-    try {
-      const response = await fetch("/api/ai/generate-whatsapp-reply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          message: whatsappMessage, 
-          tone: whatsappTone,
-          context: whatsappContext
-        }),
-      });
-      
-      const data = await response.json();
-      setResult(data.result);
-      toast.success("Respostas geradas!");
-    } catch (error) {
-      toast.error("Erro ao processar. Tente novamente!");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+  // Função para navegar para página da ferramenta
+  const goToTool = (toolId: string) => {
+    router.push(`/ferramenta/${toolId}`);
   };
 
   const topTools = [
@@ -448,12 +132,15 @@ export default function Home() {
               <a href="#contacto" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Contacto</a>
             </nav>
 
-            <a href="#premium">
-              <Button size="sm" variant="ghost" className="text-sm">
-                <Crown className="w-4 h-4 mr-1.5" />
-                Premium
-              </Button>
-            </a>
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              className="text-sm"
+              onClick={() => scrollToSection('premium')}
+            >
+              <Crown className="w-4 h-4 mr-1.5" />
+              Premium
+            </Button>
           </div>
         </div>
       </header>
@@ -477,13 +164,18 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg">
+            <Button 
+              size="lg" 
+              onClick={scrollToTools}
+              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg"
+            >
               Começar Agora
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
+              onClick={scrollToTools}
               className="relative px-8 py-6 text-lg rounded-xl border-2 bg-transparent text-gray-900 dark:text-white overflow-hidden group hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all duration-300"
               style={{
                 borderImage: "linear-gradient(135deg, rgb(236, 72, 153), rgb(168, 85, 247)) 1"
@@ -525,7 +217,7 @@ export default function Home() {
       </section>
 
       {/* Ferramentas Principais (8 mais usadas) */}
-      <section className="py-24 px-6">
+      <section id="ferramentas-principais" className="py-24 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -540,7 +232,11 @@ export default function Home() {
             {topTools.map((tool) => {
               const Icon = tool.icon;
               return (
-                <Card key={tool.id} className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 hover:border-gray-200 dark:hover:border-gray-700">
+                <Card 
+                  key={tool.id} 
+                  onClick={() => goToTool(tool.id)}
+                  className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 hover:border-gray-200 dark:hover:border-gray-700"
+                >
                   <CardContent className="p-8 text-center">
                     <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                       <Icon className="w-8 h-8 text-white" />
@@ -585,7 +281,7 @@ export default function Home() {
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                Todas as 14 Ferramentas
+                Todas as 10 Ferramentas
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400">
                 Explore todas as nossas ferramentas de IA
@@ -596,7 +292,11 @@ export default function Home() {
               {allTools.map((tool) => {
                 const Icon = tool.icon;
                 return (
-                  <Card key={tool.id} className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 hover:border-gray-200 dark:hover:border-gray-700 bg-white dark:bg-gray-950">
+                  <Card 
+                    key={tool.id} 
+                    onClick={() => goToTool(tool.id)}
+                    className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 hover:border-gray-200 dark:hover:border-gray-700 bg-white dark:bg-gray-950"
+                  >
                     <CardContent className="p-8 text-center">
                       <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                         <Icon className="w-8 h-8 text-white" />
@@ -639,13 +339,17 @@ export default function Home() {
                 </div>
                 <div className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Acesso a 14 ferramentas</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Acesso a 10 ferramentas</span>
                 </div>
                 <div className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 mt-0.5" />
                   <span className="text-sm text-gray-600 dark:text-gray-400">Suporte por email</span>
                 </div>
-                <Button variant="outline" className="w-full mt-6 rounded-xl border-2">
+                <Button 
+                  variant="outline" 
+                  onClick={scrollToTools}
+                  className="w-full mt-6 rounded-xl border-2"
+                >
                   Começar Grátis
                 </Button>
               </CardContent>
@@ -678,7 +382,10 @@ export default function Home() {
                   <Check className="w-5 h-5 text-green-500 mt-0.5" />
                   <span className="text-sm text-gray-600 dark:text-gray-400">Suporte prioritário</span>
                 </div>
-                <Button className="w-full mt-6 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600">
+                <Button 
+                  onClick={openPaymentModal}
+                  className="w-full mt-6 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+                >
                   Assinar Pro
                 </Button>
               </CardContent>
@@ -702,13 +409,17 @@ export default function Home() {
                 </div>
                 <div className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Ferramentas exclusivas</span>
+                  <span className="text-sm text-gray-400">Ferramentas exclusivas</span>
                 </div>
                 <div className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 mt-0.5" />
                   <span className="text-sm text-gray-600 dark:text-gray-400">Suporte 24/7</span>
                 </div>
-                <Button variant="outline" className="w-full mt-6 rounded-xl border-2">
+                <Button 
+                  variant="outline" 
+                  onClick={openPaymentModal}
+                  className="w-full mt-6 rounded-xl border-2"
+                >
                   Assinar Ultimate
                 </Button>
               </CardContent>
@@ -724,8 +435,8 @@ export default function Home() {
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Produto</h3>
               <ul className="space-y-3">
-                <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Ferramentas</a></li>
-                <li><a href="#premium" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Preços</a></li>
+                <li><button onClick={scrollToTools} className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Ferramentas</button></li>
+                <li><button onClick={() => scrollToSection('premium')} className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Preços</button></li>
                 <li><a href="#" className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">API</a></li>
               </ul>
             </div>
@@ -774,29 +485,59 @@ export default function Home() {
       {/* Barra Fixa Mobile (apenas mobile) */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 px-4 py-3 shadow-lg">
         <div className="flex items-center justify-around gap-2">
-          <a 
-            href="#viral-caption"
+          <button 
+            onClick={() => goToTool('viral-caption')}
             className="flex flex-col items-center gap-1 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
           >
             <Instagram className="w-5 h-5 text-pink-500" />
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Legendas</span>
-          </a>
-          <a 
-            href="#recipe"
+          </button>
+          <button 
+            onClick={() => goToTool('recipe')}
             className="flex flex-col items-center gap-1 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
           >
             <ChefHat className="w-5 h-5 text-orange-500" />
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Receitas</span>
-          </a>
-          <a 
-            href="#premium"
+          </button>
+          <button 
+            onClick={() => scrollToSection('premium')}
             className="flex flex-col items-center gap-1 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
           >
             <Crown className="w-5 h-5 text-purple-500" />
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Premium</span>
-          </a>
+          </button>
         </div>
       </div>
+
+      {/* Modal de Pagamento */}
+      <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-center">Em breve</DialogTitle>
+            <DialogDescription className="text-center pt-4">
+              <div className="flex justify-center mb-4">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center">
+                  <Crown className="w-8 h-8 text-white" />
+                </div>
+              </div>
+              <p className="text-lg text-gray-600 dark:text-gray-400 mb-2">
+                Página de pagamento em desenvolvimento
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-500">
+                Em breve você poderá assinar nossos planos Premium e Ultimate. Fique atento!
+              </p>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center pt-4">
+            <Button 
+              onClick={() => setShowPaymentModal(false)}
+              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+            >
+              Entendi
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
